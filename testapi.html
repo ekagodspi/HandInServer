@@ -1,0 +1,15 @@
+<html>
+<head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script>
+$(function(){
+$.getJSON("http://handin.hostmywebapp.com/api.php?method=show_modules&jsoncallback=?",
+     function(data){
+     console.log(data);
+});
+});
+
+</script>
+
+</head>
+</html>
