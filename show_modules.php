@@ -1,41 +1,25 @@
 <?php
 require ('d_base_/conn.php');
-//if (!isset($_SESSION)){
- //session_start();
-//}
 
 ob_start();
+//enable cross domain requests
+header("Access-Control-Allow-Origin: *");
+//enable json output
 header("Content-Type: application/json");
+
+//retrieve the query string from the url
 $year=$_REQUEST['yr'];
 
-//function show_modules($year){
+//query the database for module list for a specific level
 $sql = "SELECT * FROM  `Modules_tbl` WHERE  `Level_id` =  $year";
 $result=mysql_query($sql);
 
-$i=1;
+$modules = array();
 
- $module_array='[';
- if($result){
- $num = mysql_num_rows($result);
- while($module_list=mysql_fetch_array($result)){
- 	if($i != $num)
-	{
-$module_array.='{'.json_encode('Module_id').':'.json_encode($module_list['Module_id']).','.json_encode('Module_name').':'.json_encode($module_list['Module_name']).','.json_encode('Credits').':'.json_encode($module_list['Credits']).','.json_encode('Level_id').':'.json_encode($module_list['Level_id']).'},';
+while($row = mysql_fetch_assoc($result)) {
+	$modules[] = $row;
 }
-else
-{
-$module_array.='{'.json_encode('Module_id').':'.json_encode($module_list['Module_id']).','.json_encode('Module_name').':'.json_encode($module_list['Module_name']).','.json_encode('Credits').':'.json_encode($module_list['Credits']).','.json_encode('Level_id').':'.json_encode($module_list['Level_id']).'}';
-}
-$i++;
- }
- }
- $module_array.=']';
- echo $module_array;
-//}
-
-//show_modules();
-
-
-
+//encode and display json data
+echo $_GET['jsoncallback'] . '(' . json_encode($modules) . ');';
 
 ?>
